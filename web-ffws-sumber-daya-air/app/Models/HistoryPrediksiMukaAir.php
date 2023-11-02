@@ -11,7 +11,6 @@ class HistoryPrediksiMukaAir extends Model
 
     protected $table = 'history_prediksi_muka_air';
 
-    protected $primaryKey = 'id';
     public $incrementing = true;
 
     protected $fillable = [

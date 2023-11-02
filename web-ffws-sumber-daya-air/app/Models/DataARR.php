@@ -10,8 +10,6 @@ class DataARR extends Model
     use HasFactory;
 
     protected $table = 'data_arr_per_jam';
-
-    protected $primaryKey = 'id';
     public $incrementing = true;
 
     protected $fillable = [

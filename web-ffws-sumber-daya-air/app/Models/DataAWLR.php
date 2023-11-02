@@ -10,8 +10,6 @@ class DataAWLR extends Model
     use HasFactory;
 
     protected $table = 'data_awlr_per_jam';
-
-    protected $primaryKey = 'id';
     public $incrementing = true;
 
     protected $fillable = [
