@@ -18,6 +18,7 @@ class Users extends Model
         'email',
         'password',
         'role',
+        'no_telp',
         'created_at',
         'updated_at'
     ];

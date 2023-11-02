@@ -8,4 +8,16 @@ use Illuminate\Database\Eloquent\Model;
 class DataAWLR extends Model
 {
     use HasFactory;
+
+    protected $table = 'data_awlr_per_jam';
+
+    protected $primaryKey = 'id';
+    public $incrementing = true;
+
+    protected $fillable = [
+        'nama_stasiun',
+        'level_muka_air',
+        'elevasi_muka_air',
+        'tanggal'
+    ];
 }

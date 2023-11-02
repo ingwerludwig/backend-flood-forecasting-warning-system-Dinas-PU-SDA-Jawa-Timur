@@ -11,6 +11,7 @@ class UsersRole extends Model
 
     protected $table = 'users_role';
 
+    protected $primaryKey = 'id';
     public $incrementing = true;
 
     protected $fillable = [
@@ -30,6 +31,4 @@ class UsersRole extends Model
 
         return $CreateRoleRequest;
     }
-
-
 }
