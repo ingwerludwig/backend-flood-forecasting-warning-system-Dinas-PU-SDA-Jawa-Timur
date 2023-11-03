@@ -23,4 +23,44 @@ class Response
             'data' => $data,
         ];
     }
+
+    public static function validLoginResponse($userData, $token, $message = 'Login Successfully', $statusCode = 200){
+        return [
+            'statusCode' => $statusCode,
+            'status' => false,
+            'message' => $message,
+            'user' => $userData,
+            'authorization' => [
+                'token' => $token,
+                'type' => 'bearer',
+            ]
+        ];
+    }
+
+    public static function unauthorizedLoginResponse(){
+        return [
+            'statusCode' => 401,
+            'status' => false,
+            'message' => 'Unauthorized',
+            'user' => null,
+        ];
+    }
+
+    public static function invalidTokenResponse(){
+        return [
+            'statusCode' => 403,
+            'status' => false,
+            'message' => 'Invalid Token',
+            'user' => null,
+        ];
+    }
+
+    public static function successLogoutResponse(){
+        return [
+            'statusCode' => 200,
+            'status' => true,
+            'message' => 'Logout successfully',
+            'user' => null,
+        ];
+    }
 }

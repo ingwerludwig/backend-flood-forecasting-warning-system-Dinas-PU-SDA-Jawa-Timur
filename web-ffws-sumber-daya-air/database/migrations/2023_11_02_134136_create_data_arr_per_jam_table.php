@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('data_arr_per_jam', function (Blueprint $table) {
             $table->id()->autoIncrement()->index();
-            $table->string('nama_stasiun')->index();
-            $table->decimal('curah_hujan');
+            $table->string('nama_stasiun')->nullable()->index();
+            $table->decimal('curah_hujan')->nullable();
             $table->timestamp('tanggal')->index();
         });
     }

@@ -15,20 +15,12 @@ class UsersRoleController extends Controller
         $this->usersRoleService = $usersRoleService;
     }
     public function createUsersRole(InsertRoleRequest $request){
-        try {
-            $result = $this->usersRoleService->createRole($request);
-            return response()->json(Response::success($result, 'Role created successfully', 200));
-        } catch (\Exception $e) {
-            return response()->json(Response::error('Role creation failed', 500, $e->getMessage()));
-        }
+        $result = $this->usersRoleService->createRole($request);
+        return response()->json(Response::success($result, 'Role created successfully', 200));
     }
 
     public function getAllUsersRole(){
-        try {
-            $result = $this->usersRoleService->getAllRoles();
-            return response()->json(Response::success($result, 'Role collected successfully', 200));
-        }catch (\Exception $e){
-            return response()->json(Response::error('Role does not collected successfully', 500, $e->getMessage()));
-        }
+        $result = $this->usersRoleService->getAllRoles();
+        return response()->json(Response::success($result, 'Role collected successfully', 200));
     }
 }

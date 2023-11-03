@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('data_awlr_per_jam', function (Blueprint $table) {
             $table->id()->autoIncrement()->index();
             $table->string('nama_stasiun');
-            $table->decimal('level_muka_air')->index();;
-            $table->decimal('elevasi_muka_air');
+            $table->decimal('level_muka_air')->nullable()->index();;
+            $table->decimal('elevasi_muka_air')->nullable();
             $table->timestamp('tanggal')->index();;
         });
     }

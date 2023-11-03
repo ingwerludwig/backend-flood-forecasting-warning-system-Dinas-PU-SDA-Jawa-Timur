@@ -15,9 +15,12 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->uuid('id')->index();
-            $table->string('nama');
+            $table->string('nama')->nullable();
+            $table->string('email');
+            $table->string('password');
             $table->unsignedBigInteger('role')->index();
             $table->foreign('role')->references('id')->on('users_role');
+            $table->string('no_telp')->nullable();
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
         });

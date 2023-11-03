@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('hasil_prediksi', function (Blueprint $table) {
             $table->id()->autoIncrement()->index();
-            $table->decimal('prediksi_level_muka_air')->index();
-            $table->unsignedBigInteger('id_data_awlr_per_jam')->index();
+            $table->decimal('prediksi_level_muka_air')->nullable()->index();
+            $table->unsignedBigInteger('id_data_awlr_per_jam')->nullable()->index();
             $table->foreign('id_data_awlr_per_jam')->references('id')->on('data_awlr_per_jam');
         });
     }

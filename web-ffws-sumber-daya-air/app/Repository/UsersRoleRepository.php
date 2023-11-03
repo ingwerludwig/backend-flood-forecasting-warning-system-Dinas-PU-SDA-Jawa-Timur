@@ -15,6 +15,6 @@ class UsersRoleRepository
 
     public function getAllRoles()
     {
-        return UsersRole::all(); // Retrieve all records from the UsersRole model
+        return UsersRole::all();
     }
 }
