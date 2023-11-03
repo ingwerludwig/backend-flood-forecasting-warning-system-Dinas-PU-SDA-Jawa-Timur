@@ -18,7 +18,14 @@ class UsersRoleServiceImpl implements UsersRoleService
 
     public function getAllRoles()
     {
-        // TODO: Implement getAllRoles() method.
+        try {
+            $result = $this->usersRoleRepository->getAllRoles();
+            return $result;
+        }
+        catch (Exception $e){
+            Log::error('Error: ' . $e->getMessage() . ' caused by: ' . ($e->getPrevious() ? $e->getPrevious()->getMessage() : 'No previous exception'), ['exception' => $e]);
+            throw new \RuntimeException($e->getMessage() . ' caused by: ' . $e->getPrevious(), $e->getCode(), $e);
+        }
     }
 
     public function createRole(InsertRoleRequest $request)

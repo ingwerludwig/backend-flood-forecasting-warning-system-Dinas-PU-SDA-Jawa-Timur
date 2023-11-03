@@ -22,4 +22,13 @@ class UsersRoleController extends Controller
             return response()->json(Response::error('Role creation failed', 500, $e->getMessage()));
         }
     }
+
+    public function getAllUsersRole(){
+        try {
+            $result = $this->usersRoleService->getAllRoles();
+            return response()->json(Response::success($result, 'Role collected successfully', 200));
+        }catch (\Exception $e){
+            return response()->json(Response::error('Role does not collected successfully', 500, $e->getMessage()));
+        }
+    }
 }
