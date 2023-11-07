@@ -4,16 +4,17 @@ namespace App\Repository;
 
 use App\Http\Requests\InsertRoleRequest;
 use App\Models\UsersRole;
+use Illuminate\Database\Eloquent\Collection;
+
 class UsersRoleRepository
 {
     public function insertRole($request)
     {
         $data = UsersRole::addAdditionalData($request);
-        $result = UsersRole::create($data);
-        return $result;
+        return UsersRole::create($data);
     }
 
-    public function getAllRoles()
+    public function getAllRoles(): Collection
     {
         return UsersRole::all();
     }

@@ -9,12 +9,18 @@ class HistoryPrediksiMukaAir extends Model
 {
     use HasFactory;
 
-    protected $table = 'history_prediksi_muka_air';
+    protected $table = 'hasil_prediksi';
 
     public $incrementing = true;
 
     protected $fillable = [
-        'data_awlr_per_jam',
+        'prediksi_level_muka_air_purwodadi_lstm',
+        'prediksi_level_muka_air_purwodadi_gru',
+        'prediksi_level_muka_air_purwodadi_tcn',
+        'prediksi_level_muka_air_dhompo_lstm',
+        'prediksi_level_muka_air_dhompo_gru',
+        'prediksi_level_muka_air_dhompo_tcn',
+        'id_awlr_arr_per_jam',
         'status_muka_air',
         'created_at',
         'updated_at'

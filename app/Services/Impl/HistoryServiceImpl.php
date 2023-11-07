@@ -2,25 +2,24 @@
 
 namespace App\Services\Impl;
 
-use App\Http\Requests\InsertRoleRequest;
-use App\Services\UsersRoleService;
+use App\Repository\HistoryRepository;
+use App\Services\HistoryService;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Log;
-use App\Repository\UsersRoleRepository;
 
-class UsersRoleServiceImpl implements UsersRoleService
+class HistoryServiceImpl implements HistoryService
 {
-    protected UsersRoleRepository $usersRoleRepository;
+    protected HistoryRepository $historyRepository;
 
-    public function __construct(UsersRoleRepository $usersRoleRepository)
+    public function __construct(HistoryRepository $historyRepository)
     {
-        $this->usersRoleRepository = $usersRoleRepository;
+        $this->historyRepository = $historyRepository;
     }
 
-    public function getAllRoles(): Collection
+    public function getHistory(): Collection
     {
         try {
-            return $this->usersRoleRepository->getAllRoles();
+            return $this->historyRepository->getHistory();
         }
         catch (Exception $e){
             Log::error('Error: ' . $e->getMessage() . ' caused by: ' . ($e->getPrevious() ? $e->getPrevious()->getMessage() : 'No previous exception'), ['exception' => $e]);
@@ -28,20 +27,14 @@ class UsersRoleServiceImpl implements UsersRoleService
         }
     }
 
-    public function createRole(InsertRoleRequest $request)
+    public function getHistoryPrediction(): Collection
     {
         try {
-            $req = $request->validated();
-            return $this->usersRoleRepository->insertRole($req);
+            return $this->historyRepository->getHistoryPrediction();
         }
         catch (Exception $e){
             Log::error('Error: ' . $e->getMessage() . ' caused by: ' . ($e->getPrevious() ? $e->getPrevious()->getMessage() : 'No previous exception'), ['exception' => $e]);
             throw new \RuntimeException($e->getMessage() . ' caused by: ' . $e->getPrevious(), $e->getCode(), $e);
         }
-    }
-
-    public function changeRole($id, array $data)
-    {
-        // TODO: Implement changeRole() method.
     }
 }

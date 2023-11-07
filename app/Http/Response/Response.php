@@ -4,7 +4,7 @@ namespace App\Http\Response;
 
 class Response
 {
-    public static function success($data, $message = '', $statusCode = 200)
+    public static function success($data, $message = '', $statusCode = 200): array
     {
         return [
             'statusCode' => $statusCode,
@@ -14,7 +14,7 @@ class Response
         ];
     }
 
-    public static function error($message, $statusCode = 400, $data = null)
+    public static function error($message, $statusCode = 400, $data = null): array
     {
         return [
             'statusCode' => $statusCode,
@@ -24,7 +24,8 @@ class Response
         ];
     }
 
-    public static function validLoginResponse($userData, $token, $message = 'Login Successfully', $statusCode = 200){
+    public static function validLoginResponse($userData, $token, $message = 'Login Successfully', $statusCode = 200): array
+    {
         return [
             'statusCode' => $statusCode,
             'status' => false,
@@ -37,16 +38,18 @@ class Response
         ];
     }
 
-    public static function unauthorizedLoginResponse(){
+    public static function unauthorizedLoginResponse(): array
+    {
         return [
             'statusCode' => 401,
             'status' => false,
-            'message' => 'Unauthorized',
+            'message' => 'Unauthorized: Email or Password is invalid',
             'user' => null,
         ];
     }
 
-    public static function invalidTokenResponse(){
+    public static function invalidTokenResponse(): array
+    {
         return [
             'statusCode' => 403,
             'status' => false,
@@ -55,7 +58,8 @@ class Response
         ];
     }
 
-    public static function successLogoutResponse(){
+    public static function successLogoutResponse(): array
+    {
         return [
             'statusCode' => 200,
             'status' => true,

@@ -13,9 +13,15 @@ return new class extends Migration
     {
         Schema::create('hasil_prediksi', function (Blueprint $table) {
             $table->id()->autoIncrement()->index();
-            $table->decimal('prediksi_level_muka_air')->nullable()->index();
-            $table->unsignedBigInteger('id_data_awlr_per_jam')->nullable()->index();
-            $table->foreign('id_data_awlr_per_jam')->references('id')->on('data_awlr_per_jam');
+            $table->decimal('prediksi_level_muka_air_purwodadi_lstm')->nullable();
+            $table->decimal('prediksi_level_muka_air_purwodadi_gru')->nullable();
+            $table->decimal('prediksi_level_muka_air_purwodadi_tcn')->nullable();
+            $table->decimal('prediksi_level_muka_air_dhompo_lstm')->nullable();
+            $table->decimal('prediksi_level_muka_air_dhompo_gru')->nullable();
+            $table->decimal('prediksi_level_muka_air_dhompo_tcn')->nullable();
+            $table->string('status_muka_air')->index();
+            $table->unsignedBigInteger('id_awlr_arr_per_jam')->nullable()->index();
+            $table->foreign('id_awlr_arr_per_jam')->references('id')->on('awlr_arr_per_jam');
         });
     }
 

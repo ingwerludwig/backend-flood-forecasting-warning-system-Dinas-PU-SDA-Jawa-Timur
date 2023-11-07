@@ -171,6 +171,7 @@ return [
         App\Providers\UsersRolesServiceProvider::class,
         App\Providers\UsersServiceProvider::class,
         Tymon\JWTAuth\Providers\LaravelServiceProvider::class,
+        App\Providers\HistoryServiceProvider::class,
     ])->toArray(),
 
     /*

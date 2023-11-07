@@ -6,6 +6,7 @@ use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
 use App\Http\Response\Response;
 use App\Services\UserService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\Exceptions\TokenInvalidException;
@@ -13,14 +14,14 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthController extends Controller
 {
-    protected $usersService;
+    protected UserService $usersService;
 
     public function __construct(UserService $userService)
     {
         $this->usersService = $userService;
     }
 
-    public function register(RegisterRequest $request)
+    public function register(RegisterRequest $request): JsonResponse
     {
         try {
             $result = $this->usersService->createUser($request);
@@ -33,7 +34,8 @@ class AuthController extends Controller
         }
     }
 
-    public function returnUserData($request){
+    public function returnUserData($request): array
+    {
         return [
             'nama' => $request->nama,
             'email' => $request->email,
@@ -42,24 +44,24 @@ class AuthController extends Controller
         ];
     }
 
-    public function login(LoginRequest $request)
+    public function login(LoginRequest $request): JsonResponse
     {
         $credentials = $request->only(['email', 'password']);
 
         if (!$token = JWTAuth::attempt($credentials))
         {
-            return response()->json(Response::unauthorizedLoginResponse());
+            return response()->json(Response::unauthorizedLoginResponse(),401);
         }
 
         $user = $this->returnUserData(auth()->user());
         return response()->json(Response::validLoginResponse($user, $token, 'User login successfully'),200);
     }
 
-    public function logout()
+    public function logout(): JsonResponse
     {
         try {
             auth()->logout();
-            return response()->successLogoutResponse();
+            return response()->json(Response::successLogoutResponse());
 
         } catch (TokenInvalidException) {
             return response()->json(Response::unauthorizedLoginResponse());
@@ -69,11 +71,12 @@ class AuthController extends Controller
         }
     }
 
-    public function refresh()
+    public function refresh(): JsonResponse
     {
         return $this->respondWithToken(auth()->refresh());
     }
-    protected function respondWithToken($token)
+
+    protected function respondWithToken($token): JsonResponse
     {
         return response()->json([
             'access_token' => $token,

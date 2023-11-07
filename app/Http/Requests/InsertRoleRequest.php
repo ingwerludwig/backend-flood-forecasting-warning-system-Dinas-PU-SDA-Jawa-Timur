@@ -19,7 +19,7 @@ class InsertRoleRequest extends FormRequest
         return true;
     }
 
-    public function rules()
+    public function rules(): array
     {
         return [
             'role_name' => 'required|string'
@@ -29,9 +29,10 @@ class InsertRoleRequest extends FormRequest
     /**
      * Get the JSON format validation error.
      *
+     * @param Validator $validator
      * @return void
      */
-    protected function failedValidation(Validator $validator)
+    protected function failedValidation(Validator $validator): void
     {
         $response = Response::error('Validation error', 400, $validator->errors());
         throw new HttpResponseException(response()->json($response, 400));

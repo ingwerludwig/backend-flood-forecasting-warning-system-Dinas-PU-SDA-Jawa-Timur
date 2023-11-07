@@ -18,8 +18,7 @@ class UserServiceImpl implements UserService
     {
         try {
             $req = $request->validated();
-            $result = $this->userRepository->insertUser($req);
-            return $result;
+            return $this->userRepository->insertUser($req);
         }
         catch (Exception $e){
             Log::error('Error: ' . $e->getMessage() . ' caused by: ' . ($e->getPrevious() ? $e->getPrevious()->getMessage() : 'No previous exception'), ['exception' => $e]);

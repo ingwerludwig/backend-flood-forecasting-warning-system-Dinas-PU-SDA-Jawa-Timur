@@ -11,10 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('data_arr_per_jam', function (Blueprint $table) {
+        Schema::create('awlr_arr_per_jam', function (Blueprint $table) {
             $table->id()->autoIncrement()->index();
-            $table->string('nama_stasiun')->nullable()->index();
-            $table->decimal('curah_hujan')->nullable();
+            $table->decimal('curah_hujan_cendono')->nullable();
+            $table->decimal('curah_hujan_lawang')->nullable();
+            $table->decimal('level_muka_air_purwodadi')->nullable();
+            $table->decimal('level_muka_air_dhompo')->nullable();
             $table->timestamp('tanggal')->index();
         });
     }
@@ -24,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('data_arr_per_jam');
+        Schema::dropIfExists('awlr_arr_per_jam');
     }
 };
