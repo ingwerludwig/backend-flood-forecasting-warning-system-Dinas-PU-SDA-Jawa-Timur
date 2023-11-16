@@ -6,6 +6,7 @@ use App\Repository\HistoryRepository;
 use App\Services\HistoryService;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Log;
+use RuntimeException;
 
 class HistoryServiceImpl implements HistoryService
 {
@@ -16,25 +17,25 @@ class HistoryServiceImpl implements HistoryService
         $this->historyRepository = $historyRepository;
     }
 
-    public function getHistory(): Collection
+    public function getHistory($offsetReq, $limitReq): array
     {
         try {
-            return $this->historyRepository->getHistory();
+            return $this->historyRepository->getHistory($offsetReq, $limitReq);
         }
         catch (Exception $e){
             Log::error('Error: ' . $e->getMessage() . ' caused by: ' . ($e->getPrevious() ? $e->getPrevious()->getMessage() : 'No previous exception'), ['exception' => $e]);
-            throw new \RuntimeException($e->getMessage() . ' caused by: ' . $e->getPrevious(), $e->getCode(), $e);
+            throw new RuntimeException($e->getMessage() . ' caused by: ' . $e->getPrevious(), $e->getCode(), $e);
         }
     }
 
-    public function getHistoryPrediction(): Collection
+    public function getHistoryPrediction($offset, $limit): array
     {
         try {
-            return $this->historyRepository->getHistoryPrediction();
+            return $this->historyRepository->getHistoryPrediction($offset, $limit);
         }
         catch (Exception $e){
             Log::error('Error: ' . $e->getMessage() . ' caused by: ' . ($e->getPrevious() ? $e->getPrevious()->getMessage() : 'No previous exception'), ['exception' => $e]);
-            throw new \RuntimeException($e->getMessage() . ' caused by: ' . $e->getPrevious(), $e->getCode(), $e);
+            throw new RuntimeException($e->getMessage() . ' caused by: ' . $e->getPrevious(), $e->getCode(), $e);
         }
     }
 }

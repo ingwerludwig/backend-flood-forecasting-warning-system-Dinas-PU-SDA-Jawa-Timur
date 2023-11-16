@@ -11,6 +11,8 @@ class HistoryPrediksiMukaAir extends Model
 
     protected $table = 'hasil_prediksi';
 
+    public $timestamps = false;
+
     public $incrementing = true;
 
     protected $fillable = [
@@ -20,21 +22,8 @@ class HistoryPrediksiMukaAir extends Model
         'prediksi_level_muka_air_dhompo_lstm',
         'prediksi_level_muka_air_dhompo_gru',
         'prediksi_level_muka_air_dhompo_tcn',
-        'id_awlr_arr_per_jam',
-        'status_muka_air',
-        'created_at',
-        'updated_at'
+        'predicted_from_time',
+        'predicted_for_time',
     ];
 
-    /**
-     * @param array $CreateHistoryPrediksiRequest
-     * @return array
-     */
-    public static function addAdditionalData(array $CreateHistoryPrediksiRequest): array
-    {
-        $CreateHistoryPrediksiRequest['created_at'] = Carbon::now();
-        $CreateHistoryPrediksiRequest['updated_at'] = Carbon::now();
-
-        return $CreateHistoryPrediksiRequest;
-    }
 }

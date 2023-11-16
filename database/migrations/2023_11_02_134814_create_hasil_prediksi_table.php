@@ -19,9 +19,9 @@ return new class extends Migration
             $table->decimal('prediksi_level_muka_air_dhompo_lstm')->nullable();
             $table->decimal('prediksi_level_muka_air_dhompo_gru')->nullable();
             $table->decimal('prediksi_level_muka_air_dhompo_tcn')->nullable();
-            $table->string('status_muka_air')->index();
-            $table->unsignedBigInteger('id_awlr_arr_per_jam')->nullable()->index();
-            $table->foreign('id_awlr_arr_per_jam')->references('id')->on('awlr_arr_per_jam');
+            $table->string('status_muka_air')->nullable()->index();
+            $table->timestamp('predicted_from_time')->nullable()->index();
+            $table->timestamp('predicted_for_time')->nullable()->index();
         });
     }
 

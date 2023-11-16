@@ -4,7 +4,7 @@ namespace App\Services;
 
 interface HistoryService
 {
-    public function getHistory();
+    public function getHistory($offsetReq, $limitReq);
 
-    public function getHistoryPrediction();
+    public function getHistoryPrediction($offset, $limit);
 }

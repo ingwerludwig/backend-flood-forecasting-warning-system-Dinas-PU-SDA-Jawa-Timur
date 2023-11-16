@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Response\Response;
 use App\Services\HistoryService;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 class HistoryController extends Controller
 {
@@ -15,15 +16,19 @@ class HistoryController extends Controller
         $this->historyService = $historyService;
     }
 
-    public function getHistory(): JsonResponse
+    public function getHistory(Request $request): JsonResponse
     {
-        $result = $this->historyService->getHistory();
+        $offset = $request->input('offset');
+        $limit = $request->input('limit');
+        $result = $this->historyService->getHistory($offset, $limit);
         return response()->json((Response::success($result,'Get All History successfully',200)));
     }
 
-    public function getHistoryPrediction(): JsonResponse
+    public function getHistoryPrediction(Request $request): JsonResponse
     {
-        $result = $this->historyService->getHistoryPrediction();
+        $offset = $request->input('offset');
+        $limit = $request->input('limit');
+        $result = $this->historyService->getHistoryPrediction($offset, $limit);
         return response()->json((Response::success($result,'Get All History successfully',200)));
     }
 }

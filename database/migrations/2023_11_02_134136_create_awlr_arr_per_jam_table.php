@@ -17,7 +17,7 @@ return new class extends Migration
             $table->decimal('curah_hujan_lawang')->nullable();
             $table->decimal('level_muka_air_purwodadi')->nullable();
             $table->decimal('level_muka_air_dhompo')->nullable();
-            $table->timestamp('tanggal')->index();
+            $table->timestamp('tanggal')->nullable()->index();
         });
     }
 

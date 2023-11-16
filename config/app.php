@@ -59,6 +59,8 @@ return [
 
     'asset_url' => env('ASSET_URL'),
 
+    'flask_url' => env('FLASK_URL', 'http://localhost:8000/api/predict'),
+
     /*
     |--------------------------------------------------------------------------
     | Application Timezone
