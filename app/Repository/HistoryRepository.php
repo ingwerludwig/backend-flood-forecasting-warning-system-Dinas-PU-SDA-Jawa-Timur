@@ -25,10 +25,7 @@ class HistoryRepository
 
     public function getHistoryPrediction($offset, $limit): array
     {
-        $commonTableExpression = DB::table('hasil_prediksi')
-            ->join('awlr_arr_per_jam', 'hasil_prediksi.id_awlr_arr_per_jam', '=', 'awlr_arr_per_jam.id')
-            ->select('hasil_prediksi.*', 'awlr_arr_per_jam.tanggal')
-            ->orderBy('hasil_prediksi.id', 'desc');
+        $commonTableExpression = DB::table('hasil_prediksi')->orderBy('hasil_prediksi.id', 'desc');
 
         $data = clone $commonTableExpression;
         $data = $data->offset($offset)
@@ -41,6 +38,44 @@ class HistoryRepository
         return [
             'history' => $data,
             'total_count' => $totalCount,
+        ];
+    }
+
+    public function getChartHistory($model, $daerah, $periode): array
+    {
+        $requestedCol = "prediksi_level_muka_air_" . $daerah . "_" . $model;
+        $actualCol = "level_muka_air_" . $daerah;
+        $dataActual =  DB::table('awlr_arr_per_jam')->select('id',$actualCol,'tanggal')->orderBy('awlr_arr_per_jam.tanggal', 'desc')->limit(24+$periode)->get()->reverse()->splice($periode);
+
+        $latestActualData = "2023-09-15 10:00:00";
+//        $latestActualData = "$dataActual[0]->tanggal";
+
+        $dataPrediction = DB::table('hasil_prediksi')
+            ->select('id', $requestedCol, 'predicted_for_time')
+            ->where('hasil_prediksi.predicted_for_time', '>=', $latestActualData)
+            ->orderBy('hasil_prediksi.predicted_for_time', 'asc')
+            ->limit($periode)
+            ->get();
+
+        $dataActual = $dataActual->map(function ($item) use ($actualCol) {
+            return [
+                'id' => $item->id,
+                'nilai' => $item->$actualCol,
+                'tanggal' => $item->tanggal,
+            ];
+        });
+
+        $dataPrediction = $dataPrediction->map(function ($item) use ($requestedCol) {
+            return [
+                'id' => $item->id,
+                'nilai' => $item->$requestedCol,
+                'tanggal' => $item->predicted_for_time,
+            ];
+        });
+
+        return [
+            'aktual' => $dataActual,
+            'prediksi' => $dataPrediction
         ];
     }
 }

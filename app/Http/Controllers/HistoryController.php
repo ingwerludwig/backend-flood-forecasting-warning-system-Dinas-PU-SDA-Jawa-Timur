@@ -31,4 +31,13 @@ class HistoryController extends Controller
         $result = $this->historyService->getHistoryPrediction($offset, $limit);
         return response()->json((Response::success($result,'Get All History successfully',200)));
     }
+
+    public function getChartData(Request $request): JsonResponse
+    {
+        $model = $request->input('model');
+        $daerah = $request->input('daerah');
+        $periode = $request->input('periode');
+        $result = $this->historyService->getChartHistory($model, $daerah, $periode);
+        return response()->json((Response::success($result,'Get last 24 hours data and next requested hour\'s prediction successfully',200)));
+    }
 }

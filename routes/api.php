@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ExcelImportController;
 use App\Http\Controllers\HistoryController;
+use App\Http\Controllers\StasiunAirPosController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UsersRoleController;
@@ -28,6 +29,9 @@ Route::middleware('auth:api')->group(function() {
     Route::post('/import-excel', [ExcelImportController::class, 'importExcel']);
     Route::get('/getHistory',[HistoryController::class, 'getHistory']);
     Route::get('/getHistoryPrediction',[HistoryController::class, 'getHistoryPrediction']);
+    Route::get('/getChartData',[HistoryController::class, 'getChartData']);
+    Route::patch('/updateBatasAirStasiun',[StasiunAirPosController::class,'changeBatas']);
+    Route::get('/getAllStasiunAir',[StasiunAirPosController::class,'getAllStasiun']);
 });
 
 Route::withoutMiddleware('auth:api')->group(function() {

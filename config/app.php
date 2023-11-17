@@ -174,6 +174,7 @@ return [
         App\Providers\UsersServiceProvider::class,
         Tymon\JWTAuth\Providers\LaravelServiceProvider::class,
         App\Providers\HistoryServiceProvider::class,
+        App\Providers\StasiunAirPosProvider::class,
     ])->toArray(),
 
     /*
