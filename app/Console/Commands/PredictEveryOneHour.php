@@ -55,11 +55,11 @@ class PredictEveryOneHour extends Command
                         $threshold = DB::table('stasiun_air')
                             ->select('batas_air_siaga', 'batas_air_awas')
                             ->where('stasiun_air.nama_pos', '=', $nama_pos)
-                            ->first();  // Use first() to retrieve a single row
+                            ->first();
 
                         if ($prediction['value'] < $threshold->batas_air_siaga) {
                             $status = "AMAN";
-                        } elseif ($prediction['value'] < $threshold->batas_air_awas) {
+                        } else if ($prediction['value'] < $threshold->batas_air_awas) {
                             $status = "SIAGA";
                         } else {
                             $status = "AWAS";
@@ -75,8 +75,10 @@ class PredictEveryOneHour extends Command
                                 ->update([
                                     'prediksi_level_muka_air_purwodadi_lstm' => $modelName === 'purwodadi_lstm' ? $prediction['value'] : $existingRecord->prediksi_level_muka_air_purwodadi_lstm,
                                     'prediksi_level_muka_air_purwodadi_gru' => $modelName === 'purwodadi_gru' ? $prediction['value'] : $existingRecord->prediksi_level_muka_air_purwodadi_gru,
+                                    'prediksi_level_muka_air_purwodadi_tcn' => $modelName === 'purwodadi_tcn' ? $prediction['value'] : $existingRecord->prediksi_level_muka_air_purwodadi_tcn,
                                     'prediksi_level_muka_air_dhompo_lstm' => $modelName === 'dhompo_lstm' ? $prediction['value'] : $existingRecord->prediksi_level_muka_air_dhompo_lstm,
                                     'prediksi_level_muka_air_dhompo_gru' => $modelName === 'dhompo_gru' ? $prediction['value'] : $existingRecord->prediksi_level_muka_air_dhompo_gru,
+                                    'prediksi_level_muka_air_dhompo_tcn' => $modelName === 'dhompo_tcn' ? $prediction['value'] : $existingRecord->prediksi_level_muka_air_dhompo_tcn,
                                     'status_muka_air' => $existingRecord->status_muka_air,
                                 ]);
                         } else {
@@ -87,8 +89,10 @@ class PredictEveryOneHour extends Command
                                 'status_muka_air' => null,
                                 'prediksi_level_muka_air_purwodadi_lstm' => $modelName === 'purwodadi_lstm' ? $prediction['value'] : null,
                                 'prediksi_level_muka_air_purwodadi_gru' => $modelName === 'purwodadi_gru' ? $prediction['value'] : null,
+                                'prediksi_level_muka_air_purwodadi_tcn' => $modelName === 'purwodadi_tcn' ? $prediction['value'] : null,
                                 'prediksi_level_muka_air_dhompo_lstm' => $modelName === 'dhompo_lstm' ? $prediction['value'] : null,
                                 'prediksi_level_muka_air_dhompo_gru' => $modelName === 'dhompo_gru' ? $prediction['value'] : null,
+                                'prediksi_level_muka_air_dhompo_tcn' => $modelName === 'dhompo_tcn' ? $prediction['value'] : null,
                                 'status_muka_air' => $status,
                             ]);
                         }
