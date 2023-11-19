@@ -45,16 +45,14 @@ class HistoryRepository
     {
         $requestedCol = "prediksi_level_muka_air_" . $daerah . "_" . $model;
         $actualCol = "level_muka_air_" . $daerah;
-        $dataActual =  DB::table('awlr_arr_per_jam')->select('id',$actualCol,'tanggal')->orderBy('awlr_arr_per_jam.tanggal', 'desc')->limit(24+$periode)->get()->reverse()->splice($periode);
-
-        $latestActualData = "2023-09-15 10:00:00";
-//        $latestActualData = "$dataActual[0]->tanggal";
+        $dataActual =  DB::table('awlr_arr_per_jam')->select('id',$actualCol,'tanggal')->orderBy('awlr_arr_per_jam.tanggal', 'desc')->limit(24)->get()->reverse()->values();
+        $latestActualData = $dataActual[0]->tanggal;
 
         $dataPrediction = DB::table('hasil_prediksi')
             ->select('id', $requestedCol, 'predicted_for_time')
             ->where('hasil_prediksi.predicted_for_time', '>=', $latestActualData)
             ->orderBy('hasil_prediksi.predicted_for_time', 'asc')
-            ->limit($periode)
+            ->limit($periode+24)
             ->get();
 
         $dataActual = $dataActual->map(function ($item) use ($actualCol) {
