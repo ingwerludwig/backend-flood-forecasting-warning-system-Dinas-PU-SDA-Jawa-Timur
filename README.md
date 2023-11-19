@@ -17,7 +17,7 @@ Backend project Repository for Flood Forecasting Warning Sistem Dinas PU Sumber 
 | * [![Laravel][Laravel.com]][Laravel-url]                  | * [![Python][python.com]][python-url]              |
 | * [![MySQL][mysql.com]][mysql-url]                        | * [![Tensorflow][TensorFlow.com]][TensorFlow-url]  |
 | * [![React][React.com]][React-url]                        | * [![Flask][Flask.com]][Flask-url]                 |
-| * [![TailwindCSS][TailwindCSS.com]][TailwindCSS-url]      |                                                    |
+| * [![TailwindCSS][TailwindCSS.com]][TailwindCSS-url]      | * [![Keras][Keras.com][Keras-url]                  |
 
 ## Web Endpoint Documentation
 https://www.postman.com/myprivatepersonal/workspace/ffws-api-endpoint-testing/collection/26715144-6bb171e5-e1f5-4df6-842c-b0e6417eb53f?action=share&creator=26715144
@@ -39,3 +39,5 @@ The Laravel framework is open-sourced software licensed under the [MIT license](
 [Flask-url]: https://flask.palletsprojects.com/en/3.0.x/
 [TailwindCSS.com]: https://img.shields.io/badge/tailwindcss-%2338B2AC.svg?style=for-the-badge&logo=tailwind-css&logoColor=white
 [TailwindCSS-url]: https://tailwindcss.com
+[Keras.com]: https://img.shields.io/badge/Keras-%23D00000.svg?style=for-the-badge&logo=Keras&logoColor=white
+[Keras-url]: https://keras.io/api/
