@@ -17,7 +17,7 @@ Backend project Repository for Flood Forecasting Warning Sistem Dinas PU Sumber 
 | * [![Laravel][Laravel.com]][Laravel-url]                  | * [![Python][python.com]][python-url]              |
 | * [![MySQL][mysql.com]][mysql-url]                        | * [![Tensorflow][TensorFlow.com]][TensorFlow-url]  |
 | * [![React][React.com]][React-url]                        | * [![Flask][Flask.com]][Flask-url]                 |
-| * [![TailwindCSS][TailwindCSS.com]][TailwindCSS-url]      | * [![Keras][Keras.com][Keras-url]                  |
+| * [![TailwindCSS][TailwindCSS.com]][TailwindCSS-url]      | * [![Keras][Keras.com]][Keras-url]                 |
 
 ## Web Endpoint Documentation
 https://www.postman.com/myprivatepersonal/workspace/ffws-api-endpoint-testing/collection/26715144-6bb171e5-e1f5-4df6-842c-b0e6417eb53f?action=share&creator=26715144
