@@ -31,10 +31,6 @@ class Users extends Authenticatable implements JWTSubject
         'updated_at'
     ];
 
-    /**
-     * @param array $CreateUsersRequest
-     * @return Array
-     */
     public static function addAdditionalData(Array $CreateUsersRequest): Array
     {
         $CreateUsersRequest['id'] = Str::uuid()->toString();
@@ -51,7 +47,7 @@ class Users extends Authenticatable implements JWTSubject
      *
      * @return mixed
      */
-    public function getJWTIdentifier()
+    public function getJWTIdentifier(): mixed
     {
         return $this->getKey();
     }

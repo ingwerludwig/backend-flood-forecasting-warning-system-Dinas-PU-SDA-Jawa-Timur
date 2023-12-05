@@ -4,7 +4,6 @@ namespace App\Exceptions;
 
 use App\Http\Response\Response;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
-use Exception;
 use Throwable;
 
 class CustomExceptionHandler extends ExceptionHandler

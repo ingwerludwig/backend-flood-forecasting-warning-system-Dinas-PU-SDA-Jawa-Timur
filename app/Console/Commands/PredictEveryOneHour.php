@@ -2,12 +2,10 @@
 
 namespace App\Console\Commands;
 
-use App\Models\WaterLevelAndRainRecord;
 use Illuminate\Console\Command;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
-use Throwable;
 
 class PredictEveryOneHour extends Command
 {
@@ -65,77 +63,93 @@ class PredictEveryOneHour extends Command
                 ->select('tanggal')
                 ->first();
 
-            if ($tanggalObject) {
+            if ($tanggalObject)
+            {
                 $tanggal = $tanggalObject->tanggal;
                 $previousTimestamp = Carbon::parse($tanggal);
-            }else{
+            }
+            else
+            {
                 $previousTimestamp = null;
             }
 
+            /*
+             * Only For Simulating Data Retrieving from Dinas Database
+             */
             $data = $this->generateRandomData($previousTimestamp);
             DB::table('awlr_arr_per_jam')->insert($data);
 
 
             $rowCount = DB::table('awlr_arr_per_jam')->count();
-            if ($rowCount >= 6) {
+            if ($rowCount >= 5)
+            {
                 $flask_url = config('app.flask_url');
                 $response = Http::post($flask_url);
 
-                if ($response->status() === 200) {
+                if ($response->status() === 200)
+                {
                     $responseData = $response->json();
 
+
                     foreach ($responseData as $modelName => $modelData) {
+                        foreach ($modelData['predictions'] as $predictedForTime => $prediction) {
 
-                            foreach ($modelData['predictions'] as $predictedForTime => $prediction) {
+                            $parts = explode('_', $modelName);
+                            $nama_pos = $parts[0];
 
-                                $parts = explode('_', $modelName);
-                                $nama_pos = $parts[0];
+                            $threshold = DB::table('stasiun_air')
+                                ->select('batas_air_siaga', 'batas_air_awas')
+                                ->where('stasiun_air.nama_pos', '=', $nama_pos)
+                                ->first();
 
-                                $threshold = DB::table('stasiun_air')
-                                    ->select('batas_air_siaga', 'batas_air_awas')
-                                    ->where('stasiun_air.nama_pos', '=', $nama_pos)
-                                    ->first();
+                            if ($prediction['value'] < $threshold->batas_air_siaga)
+                            {
+                                $status = "AMAN";
+                            }
+                            else if ($prediction['value'] < $threshold->batas_air_awas)
+                            {
+                                $status = "SIAGA";
+                            }
+                            else
+                            {
+                                $status = "AWAS";
+                            }
 
-                                if ($prediction['value'] < $threshold->batas_air_siaga) {
-                                    $status = "AMAN";
-                                } else if ($prediction['value'] < $threshold->batas_air_awas) {
-                                    $status = "SIAGA";
-                                } else {
-                                    $status = "AWAS";
-                                }
+                            $existingRecord = DB::table('hasil_prediksi')
+                                ->where('predicted_for_time', $predictedForTime)
+                                ->first();
 
-                                $existingRecord = DB::table('hasil_prediksi')
+                            if ($existingRecord)
+                            {
+                                DB::table('hasil_prediksi')
                                     ->where('predicted_for_time', $predictedForTime)
-                                    ->first();
-
-                                if ($existingRecord) {
-                                    DB::table('hasil_prediksi')
-                                        ->where('predicted_for_time', $predictedForTime)
-                                        ->update([
-                                            'prediksi_level_muka_air_purwodadi_lstm' => $modelName === 'purwodadi_lstm' ? $prediction['value'] : $existingRecord->prediksi_level_muka_air_purwodadi_lstm,
-                                            'prediksi_level_muka_air_purwodadi_gru' => $modelName === 'purwodadi_gru' ? $prediction['value'] : $existingRecord->prediksi_level_muka_air_purwodadi_gru,
-                                            'prediksi_level_muka_air_purwodadi_tcn' => $modelName === 'purwodadi_tcn' ? $prediction['value'] : $existingRecord->prediksi_level_muka_air_purwodadi_tcn,
-                                            'prediksi_level_muka_air_dhompo_lstm' => $modelName === 'dhompo_lstm' ? $prediction['value'] : $existingRecord->prediksi_level_muka_air_dhompo_lstm,
-                                            'prediksi_level_muka_air_dhompo_gru' => $modelName === 'dhompo_gru' ? $prediction['value'] : $existingRecord->prediksi_level_muka_air_dhompo_gru,
-                                            'prediksi_level_muka_air_dhompo_tcn' => $modelName === 'dhompo_tcn' ? $prediction['value'] : $existingRecord->prediksi_level_muka_air_dhompo_tcn,
-                                            'status_muka_air' => $existingRecord->status_muka_air,
-                                        ]);
-                                } else {
-                                    DB::table('hasil_prediksi')->insert([
-                                        'predicted_for_time' => $predictedForTime,
-                                        'predicted_from_time' => $modelData['predicted_from_time'],
-                                        'status_muka_air' => null,
-                                        'prediksi_level_muka_air_purwodadi_lstm' => $modelName === 'purwodadi_lstm' ? $prediction['value'] : null,
-                                        'prediksi_level_muka_air_purwodadi_gru' => $modelName === 'purwodadi_gru' ? $prediction['value'] : null,
-                                        'prediksi_level_muka_air_purwodadi_tcn' => $modelName === 'purwodadi_tcn' ? $prediction['value'] : null,
-                                        'prediksi_level_muka_air_dhompo_lstm' => $modelName === 'dhompo_lstm' ? $prediction['value'] : null,
-                                        'prediksi_level_muka_air_dhompo_gru' => $modelName === 'dhompo_gru' ? $prediction['value'] : null,
-                                        'prediksi_level_muka_air_dhompo_tcn' => $modelName === 'dhompo_tcn' ? $prediction['value'] : null,
-                                        'status_muka_air' => $status,
+                                    ->update([
+                                        'prediksi_level_muka_air_purwodadi_lstm' => $modelName === 'purwodadi_lstm' ? $prediction['value'] : $existingRecord->prediksi_level_muka_air_purwodadi_lstm,
+                                        'prediksi_level_muka_air_purwodadi_gru' => $modelName === 'purwodadi_gru' ? $prediction['value'] : $existingRecord->prediksi_level_muka_air_purwodadi_gru,
+                                        'prediksi_level_muka_air_purwodadi_tcn' => $modelName === 'purwodadi_tcn' ? $prediction['value'] : $existingRecord->prediksi_level_muka_air_purwodadi_tcn,
+                                        'prediksi_level_muka_air_dhompo_lstm' => $modelName === 'dhompo_lstm' ? $prediction['value'] : $existingRecord->prediksi_level_muka_air_dhompo_lstm,
+                                        'prediksi_level_muka_air_dhompo_gru' => $modelName === 'dhompo_gru' ? $prediction['value'] : $existingRecord->prediksi_level_muka_air_dhompo_gru,
+                                        'prediksi_level_muka_air_dhompo_tcn' => $modelName === 'dhompo_tcn' ? $prediction['value'] : $existingRecord->prediksi_level_muka_air_dhompo_tcn,
+                                        'status_muka_air' => $existingRecord->status_muka_air,
                                     ]);
-                                }
+                            }
+                            else
+                            {
+                                DB::table('hasil_prediksi')->insert([
+                                    'predicted_for_time' => $predictedForTime,
+                                    'predicted_from_time' => $modelData['predicted_from_time'],
+                                    'status_muka_air' => null,
+                                    'prediksi_level_muka_air_purwodadi_lstm' => $modelName === 'purwodadi_lstm' ? $prediction['value'] : null,
+                                    'prediksi_level_muka_air_purwodadi_gru' => $modelName === 'purwodadi_gru' ? $prediction['value'] : null,
+                                    'prediksi_level_muka_air_purwodadi_tcn' => $modelName === 'purwodadi_tcn' ? $prediction['value'] : null,
+                                    'prediksi_level_muka_air_dhompo_lstm' => $modelName === 'dhompo_lstm' ? $prediction['value'] : null,
+                                    'prediksi_level_muka_air_dhompo_gru' => $modelName === 'dhompo_gru' ? $prediction['value'] : null,
+                                    'prediksi_level_muka_air_dhompo_tcn' => $modelName === 'dhompo_tcn' ? $prediction['value'] : null,
+                                    'status_muka_air' => $status,
+                                ]);
                             }
                         }
+                    }
                 }
             }
 

@@ -2,9 +2,7 @@
 
 namespace App\Repository;
 
-use App\Models\HistoryPrediksiMukaAir;
 use App\Models\WaterLevelAndRainRecord;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 
 class HistoryRepository
@@ -25,7 +23,8 @@ class HistoryRepository
 
     public function getHistoryPrediction($offset, $limit): array
     {
-        $commonTableExpression = DB::table('hasil_prediksi')->orderBy('hasil_prediksi.id', 'desc');
+        $commonTableExpression = DB::table('hasil_prediksi')
+            ->orderBy('hasil_prediksi.id', 'desc');
 
         $data = clone $commonTableExpression;
         $data = $data->offset($offset)
@@ -45,7 +44,14 @@ class HistoryRepository
     {
         $requestedCol = "prediksi_level_muka_air_" . $daerah . "_" . $model;
         $actualCol = "level_muka_air_" . $daerah;
-        $dataActual =  DB::table('awlr_arr_per_jam')->select('id',$actualCol,'tanggal')->orderBy('awlr_arr_per_jam.tanggal', 'desc')->limit(24)->get()->reverse()->values();
+
+        $dataActual =  DB::table('awlr_arr_per_jam')
+            ->select('id',$actualCol,'tanggal')
+            ->orderBy('awlr_arr_per_jam.tanggal', 'desc')
+            ->limit(24)
+            ->get()
+            ->reverse()->values();
+
         $latestActualData = $dataActual[0]->tanggal;
 
         $dataPrediction = DB::table('hasil_prediksi')

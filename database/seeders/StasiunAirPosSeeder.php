@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\StasiunAirPos;
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class StasiunAirPosSeeder extends Seeder

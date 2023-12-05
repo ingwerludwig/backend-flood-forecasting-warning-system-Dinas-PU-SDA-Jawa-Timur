@@ -7,9 +7,7 @@ use App\Http\Requests\RegisterRequest;
 use App\Http\Response\Response;
 use App\Services\UserService;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Auth;
-use Tymon\JWTAuth\Exceptions\JWTException;
-use Tymon\JWTAuth\Exceptions\TokenInvalidException;
+use Illuminate\Http\Request;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthController extends Controller
@@ -29,7 +27,7 @@ class AuthController extends Controller
             JWTAuth::fromUser($result);
             return response()->json(Response::success($user_data, 'User created successfully', 200));
         }
-        catch (\Exception $e) {
+        catch (Exception $e) {
             return response()->json(Response::error('User Registration failed', 500, $e->getMessage()));
         }
     }
@@ -59,16 +57,8 @@ class AuthController extends Controller
 
     public function logout(): JsonResponse
     {
-        try {
-            auth()->logout();
-            return response()->json(Response::successLogoutResponse());
-
-        } catch (TokenInvalidException) {
-            return response()->json(Response::unauthorizedLoginResponse());
-
-        } catch (JWTException) {
-            return response()->json(Response::invalidTokenResponse());
-        }
+        auth()->logout();
+        return response()->json(Response::successLogoutResponse());
     }
 
     public function refresh(): JsonResponse

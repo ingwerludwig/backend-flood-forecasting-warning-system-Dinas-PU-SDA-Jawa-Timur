@@ -8,16 +8,20 @@ class HistoryServiceProvider extends ServiceProvider
 {
     /**
      * Register services.
+     *
+     * @return void
      */
-    public function register(): void
+    public function register()
     {
         $this->app->bind('App\Services\HistoryService', 'App\Services\Impl\HistoryServiceImpl');
     }
 
     /**
      * Bootstrap services.
+     *
+     * @return void
      */
-    public function boot(): void
+    public function boot()
     {
         //
     }

@@ -8,3 +8,4 @@ interface UserService
 {
     public function createUser(RegisterRequest $request);
 }
+

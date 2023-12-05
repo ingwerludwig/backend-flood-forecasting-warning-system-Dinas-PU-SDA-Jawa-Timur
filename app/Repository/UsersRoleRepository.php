@@ -2,7 +2,6 @@
 
 namespace App\Repository;
 
-use App\Http\Requests\InsertRoleRequest;
 use App\Models\UsersRole;
 use Illuminate\Database\Eloquent\Collection;
 

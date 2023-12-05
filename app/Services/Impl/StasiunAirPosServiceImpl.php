@@ -4,7 +4,8 @@ namespace App\Services\Impl;
 
 use App\Repository\StasiunAirPosRepository;
 use App\Services\StasiunAirPosService;
-use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\Log;
 
 class StasiunAirPosServiceImpl implements StasiunAirPosService
 {
@@ -26,7 +27,7 @@ class StasiunAirPosServiceImpl implements StasiunAirPosService
         }
     }
 
-    public function getAllStasiun()
+    public function getAllStasiun(): Collection
     {
         try {
             return $this->stasiunAirPosRepository->getAllStasiun();

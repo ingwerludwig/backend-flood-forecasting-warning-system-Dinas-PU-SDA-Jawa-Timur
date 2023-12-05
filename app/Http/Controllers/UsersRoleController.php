@@ -3,9 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\InsertRoleRequest;
-use App\Services\UsersRoleService;
 use App\Http\Response\Response;
+use App\Services\UsersRoleService;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 class UsersRoleController extends Controller
 {

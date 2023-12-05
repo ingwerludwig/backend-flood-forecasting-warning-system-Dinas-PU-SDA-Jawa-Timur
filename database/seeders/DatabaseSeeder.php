@@ -2,21 +2,31 @@
 
 namespace Database\Seeders;
 
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\StasiunAirPos;
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
-class DatabaseSeeder extends Seeder
+class StasiunAirPosSeeder extends Seeder
 {
     /**
-     * Seed the application's database.
+     * Run the database seeds.
      */
     public function run(): void
     {
-        // \App\Models\User::factory(10)->create();
+        $data = [
+            [
+                'nama_pos' => 'dhompo',
+                'batas_air_siaga' => 1,
+                'batas_air_awas' => 1.5,
+            ],
+            [
+                'nama_pos' => 'purwodadi',
+                'batas_air_siaga' => 0.6,
+                'batas_air_awas' => 1
+            ]
+        ];
 
-        // \App\Models\User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
+        StasiunAirPos::insert($data);
     }
 }
+

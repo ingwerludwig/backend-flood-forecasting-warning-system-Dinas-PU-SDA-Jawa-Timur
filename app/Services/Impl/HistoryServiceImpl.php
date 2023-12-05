@@ -4,9 +4,7 @@ namespace App\Services\Impl;
 
 use App\Repository\HistoryRepository;
 use App\Services\HistoryService;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Log;
-use RuntimeException;
 
 class HistoryServiceImpl implements HistoryService
 {

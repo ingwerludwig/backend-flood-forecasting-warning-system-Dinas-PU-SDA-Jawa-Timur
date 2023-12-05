@@ -8,16 +8,20 @@ class UsersRolesServiceProvider extends ServiceProvider
 {
     /**
      * Register services.
+     *
+     * @return void
      */
-    public function register(): void
+    public function register()
     {
         $this->app->bind('App\Services\UsersRoleService', 'App\Services\Impl\UsersRoleServiceImpl');
     }
 
     /**
      * Bootstrap services.
+     *
+     * @return void
      */
-    public function boot(): void
+    public function boot()
     {
         //
     }

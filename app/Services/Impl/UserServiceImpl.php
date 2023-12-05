@@ -5,6 +5,7 @@ namespace App\Services\Impl;
 use App\Http\Requests\RegisterRequest;
 use App\Repository\UserRepository;
 use App\Services\UserService;
+use Illuminate\Support\Facades\Log;
 
 class UserServiceImpl implements UserService
 {
@@ -22,7 +23,7 @@ class UserServiceImpl implements UserService
         }
         catch (Exception $e){
             Log::error('Error: ' . $e->getMessage() . ' caused by: ' . ($e->getPrevious() ? $e->getPrevious()->getMessage() : 'No previous exception'), ['exception' => $e]);
-            throw new \RuntimeException($e->getMessage() . ' caused by: ' . $e->getPrevious(), $e->getCode(), $e);
+            throw new RuntimeException($e->getMessage() . ' caused by: ' . $e->getPrevious(), $e->getCode(), $e);
         }
     }
 

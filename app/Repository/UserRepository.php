@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Repository;
+
 use App\Models\Users;
 
 class UserRepository

@@ -2,15 +2,13 @@
 
 namespace App\Http\Controllers;
 
-
 use App\Http\Response\Response;
 use App\Models\WaterLevelAndRainRecord;
-use App\Models\DataAWLR;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
 use PhpOffice\PhpSpreadsheet\Shared\Date;
-
 
 class ExcelImportController extends Controller
 {
@@ -45,7 +43,7 @@ class ExcelImportController extends Controller
 
         catch (Exception $e){
             Log::error('Error: ' . $e->getMessage() . ' caused by: ' . ($e->getPrevious() ? $e->getPrevious()->getMessage() : 'No previous exception'), ['exception' => $e]);
-            throw new \RuntimeException($e->getMessage() . ' caused by: ' . $e->getPrevious(), $e->getCode(), $e);
+            throw new RuntimeException($e->getMessage() . ' caused by: ' . $e->getPrevious(), $e->getCode(), $e);
         }
     }
 

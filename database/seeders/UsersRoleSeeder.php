@@ -2,10 +2,10 @@
 
 namespace Database\Seeders;
 
+use App\Models\UsersRole;
 use Carbon\Carbon;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use App\Models\UsersRole;
 
 class UsersRoleSeeder extends Seeder
 {
@@ -31,3 +31,4 @@ class UsersRoleSeeder extends Seeder
         UsersRole::insert($roles);
     }
 }
+

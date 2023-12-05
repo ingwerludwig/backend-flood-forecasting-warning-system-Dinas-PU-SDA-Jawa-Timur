@@ -3,10 +3,10 @@
 namespace App\Services\Impl;
 
 use App\Http\Requests\InsertRoleRequest;
+use App\Repository\UsersRoleRepository;
 use App\Services\UsersRoleService;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Log;
-use App\Repository\UsersRoleRepository;
 
 class UsersRoleServiceImpl implements UsersRoleService
 {
@@ -24,7 +24,7 @@ class UsersRoleServiceImpl implements UsersRoleService
         }
         catch (Exception $e){
             Log::error('Error: ' . $e->getMessage() . ' caused by: ' . ($e->getPrevious() ? $e->getPrevious()->getMessage() : 'No previous exception'), ['exception' => $e]);
-            throw new \RuntimeException($e->getMessage() . ' caused by: ' . $e->getPrevious(), $e->getCode(), $e);
+            throw new RuntimeException($e->getMessage() . ' caused by: ' . $e->getPrevious(), $e->getCode(), $e);
         }
     }
 
@@ -36,7 +36,7 @@ class UsersRoleServiceImpl implements UsersRoleService
         }
         catch (Exception $e){
             Log::error('Error: ' . $e->getMessage() . ' caused by: ' . ($e->getPrevious() ? $e->getPrevious()->getMessage() : 'No previous exception'), ['exception' => $e]);
-            throw new \RuntimeException($e->getMessage() . ' caused by: ' . $e->getPrevious(), $e->getCode(), $e);
+            throw new RuntimeException($e->getMessage() . ' caused by: ' . $e->getPrevious(), $e->getCode(), $e);
         }
     }
 
