@@ -59,6 +59,15 @@ return [
     'asset_url' => env('ASSET_URL', null),
 
     'flask_url' => env('FLASK_URL', 'http://localhost:8000/api/predict'),
+    'sih_3_token_url' => env('SIH3_TOKEN_URL'),
+    'sih_3_get_pos_url' => env('SIH3_GET_POS_URL'),
+    'sih_3_pos_detail_url' => env('SIH3_POS_DETAIL_URL'),
+    'sih_3_username' => env('SIH3_API_USERNAME'),
+    'sih_3_password' => env('SIH3_API_PASSWORD'),
+    'sih_3_grant_type' => env('SIH3_API_GRANT_TYPE'),
+    'sih_3_client_id' => env('SIH3_API_CLIENT_ID'),
+    'sih_3_client_secret' => env('SIH3_API_CLIENT_SECRET'),
+
     /*
     |--------------------------------------------------------------------------
     | Application Timezone

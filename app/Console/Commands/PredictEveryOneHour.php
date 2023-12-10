@@ -2,6 +2,8 @@
 
 namespace App\Console\Commands;
 
+use Exception;
+use GuzzleHttp\Client;
 use Illuminate\Console\Command;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -14,39 +16,139 @@ class PredictEveryOneHour extends Command
      *
      * @var string
      */
-    protected $signature = 'command:predictevery1hour';
-
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
+    protected $signature = 'predict:everyonehour';
     protected $description = 'Predict the next 1 hour of height of water surface to Flask';
-
 
     public function __construct()
     {
         parent::__construct();
     }
 
-
-    function generateRandomData($previousTimestamp = null)
+    function getSensorData($previousTimestamp = null)
     {
-        $curahHujanCendono = mt_rand(0, 25) / 100;
-        $curahHujanLawang = mt_rand(0, 100) / 100;
-        $levelMukaAirPurwodadi = mt_rand(0, 100) / 100;
-        $levelMukaAirDhompo = mt_rand(0, 300) / 100;
+        $flask_url = config('app.flask_url');
+        $sih_3_token_url = config('app.sih_3_token_url');
+        $sih_3_get_pos_url = config('app.sih_3_get_pos_url');
+        $sih_3_pos_detail_url = config('app.sih_3_pos_detail_url');
+        $sih_3_username = config('app.sih_3_username');
+        $sih_3_password = config('app.sih_3_password');
+        $sih_3_grant_type = config('app.sih_3_grant_type');
+        $sih_3_client_id = config('app.sih_3_client_id');
+        $sih_3_client_secret = config('app.sih_3_client_secret');
 
-        $timestamp = ($previousTimestamp === null) ? now() : $previousTimestamp->addHour();
+        if($previousTimestamp === null){
+            $previousTimestamp = now()->addHours(7)->setSecond(0)->setMinute(0);
+            $dateString = now()->addHours(7)->format('Y-m-d');
+        }
+        else{
+            $dateString =$previousTimestamp->format('Y-m-d');
+        }
+
+        $timestamp = Carbon::parse($previousTimestamp);
         $formattedTimestamp = $timestamp->format('Y-m-d H:i:s');
 
-        return [
-            'curah_hujan_cendono' => $curahHujanCendono,
-            'curah_hujan_lawang' => $curahHujanLawang,
-            'level_muka_air_purwodadi' => $levelMukaAirPurwodadi,
-            'level_muka_air_dhompo' => $levelMukaAirDhompo,
-            'tanggal' => $formattedTimestamp,
+        $client = new Client();
+        $url = $sih_3_token_url;
+        $data = [
+            'username' => $sih_3_username,
+            'password' => $sih_3_password,
+            'grant_type' => $sih_3_grant_type,
+            'client_id' => $sih_3_client_id,
+            'client_secret' => $sih_3_client_secret,
         ];
+
+        $response = $client->post($url, [
+            'form_params' => $data,
+        ]);
+
+        $body = $response->getBody()->getContents();
+        $result = json_decode($body, true);
+        $token = $result['access_token'];
+
+        $client1 = new Client([
+            'headers' => [
+                'Authorization' => 'Bearer ' . $token,
+                'Accept' => 'application/json',
+            ],
+        ]);
+
+        $response = $client1->get($sih_3_get_pos_url);
+        if ($response->getStatusCode() == 200) {
+            $data = json_decode($response->getBody(), true);
+            $targetStationNames = ["Puwodadi - S. Welang", "Dhompo - S. Welang", "ARR Cendono", "ARR Lawang"];
+            $filteredData = array_filter($data, function ($station) use ($targetStationNames) {
+                return in_array($station['nama_stasiun'], $targetStationNames);
+            });
+
+            $id_lawang = null;$id_cendono = null;$id_dhompo = null;$id_purwodadi = null;
+
+            foreach ($filteredData as $station) {
+                switch ($station['nama_stasiun']) {
+                    case 'ARR Lawang':
+                        $id_lawang = $station['id'];
+                        break;
+                    case 'ARR Cendono':
+                        $id_cendono = $station['id'];
+                        break;
+                    case 'Dhompo - S. Welang':
+                        $id_dhompo = $station['id'];
+                        break;
+                    case 'Puwodadi - S. Welang':
+                        $id_purwodadi = $station['id'];
+                        break;
+                }
+            }
+
+            $current_hour = Carbon::parse($formattedTimestamp)->hour;
+//            dd($current_hour);
+            $responseLawang = $client1->get($sih_3_pos_detail_url.$id_lawang.'/'.$dateString.'/1/1');
+            $responseCendono = $client1->get($sih_3_pos_detail_url.$id_cendono.'/'.$dateString.'/1/1');
+            $responseDhompo = $client1->get($sih_3_pos_detail_url.$id_dhompo.'/'.$dateString.'/1/2');
+            $responsePurwodadi = $client1->get($sih_3_pos_detail_url.$id_purwodadi.'/'.$dateString.'/1/2');
+
+            if ($responseLawang->getStatusCode() == 200) {
+                $data_json_lawang = json_decode($responseLawang->getBody(), true);
+                $dataLawang = array_filter($data_json_lawang['data'], function ($item) use ($current_hour) {
+                    return $item['jam'] == $current_hour;
+                });
+            }
+
+            if ($responseCendono->getStatusCode() == 200) {
+                $data_json_cendono = json_decode($responseCendono->getBody(), true);
+                $dataCendono = array_filter($data_json_cendono['data'], function ($item) use ($current_hour) {
+                    return $item['jam'] == $current_hour;
+                });
+            }
+
+            if ($responseDhompo->getStatusCode() == 200) {
+                $data_json_dhompo = json_decode($responseDhompo->getBody(), true);
+                $dataDhompo = array_filter($data_json_dhompo['data'], function ($item) use ($current_hour) {
+                    return $item['jam'] == $current_hour;
+                });
+            }
+
+            if ($responsePurwodadi->getStatusCode() == 200) {
+                $data_json_purwodadi = json_decode($responsePurwodadi->getBody(), true);
+                $dataPurwodadi = array_filter($data_json_purwodadi['data'], function ($item) use ($current_hour) {
+                    return $item['jam'] == $current_hour;
+                });
+            }
+
+            $curahHujanCendono = $dataCendono[$current_hour]['nilai'];
+            $curahHujanLawang = $dataLawang[$current_hour]['nilai'];
+            $levelMukaAirPurwodadi = $dataPurwodadi[$current_hour]['nilai'];
+            $levelMukaAirDhompo = $dataDhompo[$current_hour]['nilai'];
+
+            return [
+                'curah_hujan_cendono' => (float)$curahHujanCendono,
+                'curah_hujan_lawang' => (float)$curahHujanLawang,
+                'level_muka_air_purwodadi' => (float)$levelMukaAirPurwodadi,
+                'level_muka_air_dhompo' => (float)$levelMukaAirDhompo,
+                'tanggal' => $formattedTimestamp,
+            ];
+        }
+
+
     }
 
 
@@ -66,19 +168,20 @@ class PredictEveryOneHour extends Command
             if ($tanggalObject)
             {
                 $tanggal = $tanggalObject->tanggal;
-                $previousTimestamp = Carbon::parse($tanggal);
+                $previousTimestamp = Carbon::parse($tanggal)->addHours(1);
             }
             else
             {
                 $previousTimestamp = null;
             }
 
-            /*
-             * Only For Simulating Data Retrieving from Dinas Database
-             */
-            $data = $this->generateRandomData($previousTimestamp);
-            DB::table('awlr_arr_per_jam')->insert($data);
+            $data = $this->getSensorData($previousTimestamp);
 
+            if (DB::table('awlr_arr_per_jam')->where('tanggal', $data['tanggal'])->exists()) {
+                DB::table('awlr_arr_per_jam')->where('tanggal', $data['tanggal'])->update($data);
+            } else {
+                DB::table('awlr_arr_per_jam')->insert($data);
+            }
 
             $rowCount = DB::table('awlr_arr_per_jam')->count();
             if ($rowCount >= 5)
@@ -152,7 +255,7 @@ class PredictEveryOneHour extends Command
                     }
                 }
             }
-
+            $this->info('Prediction executed successfully!');
             DB::commit();
             return 0;
 
