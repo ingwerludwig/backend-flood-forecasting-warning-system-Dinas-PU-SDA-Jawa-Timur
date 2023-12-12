@@ -191,6 +191,8 @@ return [
         App\Providers\UsersServiceProvider::class,
         App\Providers\HistoryServiceProvider::class,
         App\Providers\StasiunAirPosProvider::class,
+        App\Providers\StasiunHujanPosProvider::class,
+        App\Providers\NotifikasiKontakProvider::class,
 
     ],
 

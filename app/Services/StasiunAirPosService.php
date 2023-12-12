@@ -6,5 +6,5 @@ interface StasiunAirPosService
 {
     public function changeBatas($request);
 
-    public function getAllStasiun();
+    public function getStasiunInformation($request);
 }

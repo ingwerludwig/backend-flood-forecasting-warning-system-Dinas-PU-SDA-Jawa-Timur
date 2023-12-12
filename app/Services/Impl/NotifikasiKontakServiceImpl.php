@@ -2,23 +2,26 @@
 
 namespace App\Services\Impl;
 
-use App\Repository\HistoryRepository;
-use App\Services\HistoryService;
+use App\Http\Requests\AddKontakNotifikasiRequest;
+use App\Http\Requests\ChangeKontakNotifikasiRequest;
+use App\Repository\NotifikasiKontakRepository;
+use App\Services\NotifikasiKontakService;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Log;
 
-class HistoryServiceImpl implements HistoryService
+class NotifikasiKontakServiceImpl implements NotifikasiKontakService
 {
-    protected HistoryRepository $historyRepository;
+    protected NotifikasiKontakRepository $notifikasiKontakRepository;
 
-    public function __construct(HistoryRepository $historyRepository)
+    public function __construct(NotifikasiKontakRepository $notifikasiKontakRepository)
     {
-        $this->historyRepository = $historyRepository;
+        $this->notifikasiKontakRepository = $notifikasiKontakRepository;
     }
-
-    public function getHistory($offsetReq, $limitReq, $daerah): array
+    public function insertKontak(AddKontakNotifikasiRequest $request)
     {
         try {
-            return $this->historyRepository->getHistory($offsetReq, $limitReq, $daerah);
+            $req = $request->validated();
+            return $this->notifikasiKontakRepository->insertKontak($req);
         }
         catch (Exception $e){
             Log::error('Error: ' . $e->getMessage() . ' caused by: ' . ($e->getPrevious() ? $e->getPrevious()->getMessage() : 'No previous exception'), ['exception' => $e]);
@@ -26,10 +29,10 @@ class HistoryServiceImpl implements HistoryService
         }
     }
 
-    public function getHistoryPrediction($offset, $limit): array
+    public function changeKontakInfo($request)
     {
         try {
-            return $this->historyRepository->getHistoryPrediction($offset, $limit);
+            return $this->notifikasiKontakRepository->changeKontakInfo($request);
         }
         catch (Exception $e){
             Log::error('Error: ' . $e->getMessage() . ' caused by: ' . ($e->getPrevious() ? $e->getPrevious()->getMessage() : 'No previous exception'), ['exception' => $e]);
@@ -37,10 +40,10 @@ class HistoryServiceImpl implements HistoryService
         }
     }
 
-    public function getChartHistory($model, $daerah, $periode): array
+    public function getAllKontak(): Collection
     {
         try {
-            return $this->historyRepository->getChartHistory($model, $daerah, $periode);
+            return $this->notifikasiKontakRepository->getAllKontak();
         }
         catch (Exception $e){
             Log::error('Error: ' . $e->getMessage() . ' caused by: ' . ($e->getPrevious() ? $e->getPrevious()->getMessage() : 'No previous exception'), ['exception' => $e]);

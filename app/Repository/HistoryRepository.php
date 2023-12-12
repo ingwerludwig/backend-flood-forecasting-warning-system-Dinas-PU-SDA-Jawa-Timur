@@ -7,11 +7,34 @@ use Illuminate\Support\Facades\DB;
 
 class HistoryRepository
 {
-    public function getHistory($offsetReq, $limitReq): array
+    public function getHistory($offsetReq, $limitReq, $daerah): array
     {
-        $dataQuery =  WaterLevelAndRainRecord::orderBy('id', 'desc')
-            ->offset($offsetReq)
-            ->limit($limitReq);
+        if($daerah=="lawang"){
+            $dataQuery =  WaterLevelAndRainRecord::select('id','curah_hujan_lawang','tanggal')
+                ->orderBy('id', 'desc')
+                ->offset($offsetReq)
+                ->limit($limitReq);
+        }else if($daerah=="cendono"){
+            $dataQuery =  WaterLevelAndRainRecord::select('id','curah_hujan_cendono','tanggal')
+                ->orderBy('id', 'desc')
+                ->offset($offsetReq)
+                ->limit($limitReq);
+        }else if($daerah=="purwodadi"){
+            $dataQuery =  WaterLevelAndRainRecord::select('id','level_muka_air_purwodadi','tanggal')
+                ->orderBy('id', 'desc')
+                ->offset($offsetReq)
+                ->limit($limitReq);
+        }else if($daerah=="dhompo"){
+            $dataQuery =  WaterLevelAndRainRecord::select('id','level_muka_air_dhompo','tanggal')
+                ->orderBy('id', 'desc')
+                ->offset($offsetReq)
+                ->limit($limitReq);
+        }else{
+            return [
+                'history' => null,
+                'total_count' => 0,
+            ];
+        }
         $data = $dataQuery->get();
         $totalCount = $dataQuery->toBase()->getCountForPagination();
         return [
@@ -48,38 +71,66 @@ class HistoryRepository
         $dataActual =  DB::table('awlr_arr_per_jam')
             ->select('id',$actualCol,'tanggal')
             ->orderBy('awlr_arr_per_jam.tanggal', 'desc')
-            ->limit(24)
-            ->get()
-            ->reverse()->values();
-
+            ->limit(1)
+            ->get();
         $latestActualData = $dataActual[0]->tanggal;
 
         $dataPrediction = DB::table('hasil_prediksi')
-            ->select('id', $requestedCol, 'predicted_for_time')
-            ->where('hasil_prediksi.predicted_for_time', '>=', $latestActualData)
+            ->select( DB::raw("$requestedCol as prediksi") , DB::raw("predicted_for_time as tanggal"))
+            ->where('hasil_prediksi.predicted_for_time', '>', $latestActualData)
             ->orderBy('hasil_prediksi.predicted_for_time', 'asc')
-            ->limit($periode+24)
+            ->limit($periode)
             ->get();
+        $predictionPrevious = DB::table('hasil_prediksi')
+            ->select( DB::raw("$requestedCol as prediksi") , DB::raw("predicted_for_time as tanggal"))
+            ->where('hasil_prediksi.predicted_for_time', '<=', $latestActualData)
+            ->orderBy('hasil_prediksi.predicted_for_time', 'desc')
+            ->limit(24-$periode-1)
+            ->get()
+            ->reverse()->values();
 
-        $dataActual = $dataActual->map(function ($item) use ($actualCol) {
-            return [
-                'id' => $item->id,
-                'nilai' => $item->$actualCol,
-                'tanggal' => $item->tanggal,
+        $dataPredictionForChart = $predictionPrevious->merge($dataPrediction);
+
+        $dataActual =  DB::table('awlr_arr_per_jam')
+            ->select(DB::raw("$actualCol as aktual"),'tanggal')
+            ->where('awlr_arr_per_jam.tanggal', '<=', $latestActualData)
+            ->orderBy('awlr_arr_per_jam.tanggal', 'desc')
+            ->limit(24-$periode)
+            ->get()
+            ->reverse()->values();
+
+        $joinedData = collect();
+
+        foreach ($dataActual as $actualItem) {
+            $joinedItem = [
+                'aktual' => $actualItem->aktual,
+                'prediksi' => null,
+                'tanggal' => $actualItem->tanggal,
             ];
-        });
 
-        $dataPrediction = $dataPrediction->map(function ($item) use ($requestedCol) {
-            return [
-                'id' => $item->id,
-                'nilai' => $item->$requestedCol,
-                'tanggal' => $item->predicted_for_time,
-            ];
-        });
+            $matchingPrediction = $dataPredictionForChart->firstWhere('tanggal', $actualItem->tanggal);
 
-        return [
-            'aktual' => $dataActual,
-            'prediksi' => $dataPrediction
-        ];
+            if ($matchingPrediction) {
+                $joinedItem['prediksi'] = $matchingPrediction->prediksi;
+            }
+
+            $joinedData->push($joinedItem);
+        }
+
+        foreach ($dataPredictionForChart as $predictionItem) {
+            $existingItem = $joinedData->firstWhere('tanggal', $predictionItem->tanggal);
+
+            if (!$existingItem) {
+                $joinedData->push([
+                    'aktual' => null,
+                    'prediksi' => $predictionItem->prediksi,
+                    'tanggal' => $predictionItem->tanggal,
+                ]);
+            }
+        }
+
+        $joinedData = $joinedData->sortBy('tanggal')->values();
+
+        return $joinedData->toArray();
     }
 }

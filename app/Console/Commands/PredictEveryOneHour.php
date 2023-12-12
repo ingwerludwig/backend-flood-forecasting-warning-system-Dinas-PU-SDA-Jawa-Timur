@@ -159,7 +159,6 @@ class PredictEveryOneHour extends Command
     public function handle(): int
     {
         try {
-            DB::beginTransaction();
             $tanggalObject = DB::table('awlr_arr_per_jam')
                 ->orderBy('tanggal', 'desc')
                 ->select('tanggal')
@@ -215,7 +214,7 @@ class PredictEveryOneHour extends Command
                             }
                             else
                             {
-                                $status = "AWAS";
+                                $status = "BAHAYA";
                             }
 
                             $existingRecord = DB::table('hasil_prediksi')
@@ -256,11 +255,10 @@ class PredictEveryOneHour extends Command
                 }
             }
             $this->info('Prediction executed successfully!');
-            DB::commit();
             return 0;
 
         } catch (Throwable $exception) {
-            DB::rollBack();
+//            DB::rollBack();
             throw $exception;
         }
     }

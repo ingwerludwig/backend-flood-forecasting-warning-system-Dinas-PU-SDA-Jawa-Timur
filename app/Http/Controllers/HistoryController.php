@@ -20,7 +20,8 @@ class HistoryController extends Controller
     {
         $offset = $request->input('offset');
         $limit = $request->input('limit');
-        $result = $this->historyService->getHistory($offset, $limit);
+        $daerah = $request->input('daerah');
+        $result = $this->historyService->getHistory($offset, $limit, $daerah);
         return response()->json((Response::success($result,'Get All History successfully',200)));
     }
 

@@ -16,8 +16,8 @@ class StasiunAirPosRepository
         return StasiunAirPos::find($request->input('id'));
     }
 
-    public function getAllStasiun()
+    public function getStasiunInformation($request)
     {
-        return StasiunAirPos::all();
+        return StasiunAirPos::find($request->input('id'));
     }
 }

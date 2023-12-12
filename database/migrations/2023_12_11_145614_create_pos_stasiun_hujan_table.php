@@ -11,21 +11,24 @@ return new class extends Migration
      *
      * @return void
      */
-    public function up(): void
+    public function up()
     {
-        Schema::create('stasiun_air', function (Blueprint $table) {
+        Schema::create('stasiun_hujan', function (Blueprint $table) {
             $table->id()->autoIncrement()->index();
             $table->string('nama_pos')->index();
-            $table->decimal('batas_air_siaga');
-            $table->decimal('batas_air_awas');
+            $table->decimal('batas_hujan_ringan');
+            $table->decimal('batas_hujan_sedang');
+            $table->decimal('batas_hujan_berat');
         });
     }
 
     /**
      * Reverse the migrations.
+     *
+     * @return void
      */
-    public function down(): void
+    public function down()
     {
-        Schema::dropIfExists('stasiun_air');
+        Schema::dropIfExists('stasiun_hujan');
     }
 };

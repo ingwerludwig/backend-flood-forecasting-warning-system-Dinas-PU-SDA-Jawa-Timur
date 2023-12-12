@@ -2,24 +2,24 @@
 
 namespace App\Services\Impl;
 
-use App\Repository\StasiunAirPosRepository;
-use App\Services\StasiunAirPosService;
+use App\Repository\StasiunHujanPosRepository;
+use App\Services\StasiunPosHujanService;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Log;
 
-class StasiunAirPosServiceImpl implements StasiunAirPosService
+class StasiunHujanPosServiceImpl implements StasiunPosHujanService
 {
-    protected StasiunAirPosRepository $stasiunAirPosRepository;
+    protected StasiunHujanPosRepository $stasiunHujanPosRepository;
 
-    public function __construct(StasiunAirPosRepository $stasiunAirPosRepository)
+    public function __construct(StasiunHujanPosRepository $stasiunHujanPosRepository)
     {
-        $this->stasiunAirPosRepository = $stasiunAirPosRepository;
+        $this->stasiunHujanPosRepository = $stasiunHujanPosRepository;
     }
 
     public function changeBatas($request)
     {
         try {
-            return $this->stasiunAirPosRepository->changeBatas($request);
+            return $this->stasiunHujanPosRepository->changeBatas($request);
         }
         catch (Exception $e){
             Log::error('Error: ' . $e->getMessage() . ' caused by: ' . ($e->getPrevious() ? $e->getPrevious()->getMessage() : 'No previous exception'), ['exception' => $e]);
@@ -30,7 +30,7 @@ class StasiunAirPosServiceImpl implements StasiunAirPosService
     public function getStasiunInformation($request)
     {
         try {
-            return $this->stasiunAirPosRepository->getStasiunInformation($request);
+            return $this->stasiunHujanPosRepository->getStasiunInformation($request);
         }
         catch (Exception $e){
             Log::error('Error: ' . $e->getMessage() . ' caused by: ' . ($e->getPrevious() ? $e->getPrevious()->getMessage() : 'No previous exception'), ['exception' => $e]);

@@ -23,10 +23,11 @@ class StasiunAirPosController extends Controller
         return response()->json(Response::success($result, 'Batas air changed successfully', 200));
     }
 
-    public function getAllStasiun(): JsonResponse
+    public function getStasiunInformation(Request $request): JsonResponse
     {
-        $result = $this->stasiunAirPosService->getAllStasiun();
-        return response()->json(Response::success($result, 'Get All Stasiun air successfully', 200));
+        $result = $this->stasiunAirPosService->getStasiunInformation($request);
+        return response()->json(Response::success($result, 'Get Stasiun air information successfully', 200));
     }
+
 
 }
