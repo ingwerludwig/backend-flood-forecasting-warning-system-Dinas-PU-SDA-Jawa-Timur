@@ -27,7 +27,7 @@ Backend project Repository for Flood Forecasting Warning Sistem Dinas PU Sumber 
 ## Getting Started
 1. Clone this repository
 ```
-git clone https://github.com/ingwerludwig/web-flood-forecasting-warning-system-Dinas-PU-SDA-Jatim.git
+git clone https://github.com/ingwerludwig/backend-flood-forecasting-warning-system-Dinas-PU-SDA-Jawa-Timur.git
 ```
 2. Install All Dependencies
 ```
