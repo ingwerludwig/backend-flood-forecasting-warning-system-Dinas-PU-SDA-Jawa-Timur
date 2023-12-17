@@ -9,32 +9,42 @@ class HistoryRepository
 {
     public function getHistory($offsetReq, $limitReq, $daerah): array
     {
-        if($daerah=="lawang"){
+        if($daerah=="lawang")
+        {
             $dataQuery =  WaterLevelAndRainRecord::select('id','curah_hujan_lawang','tanggal')
                 ->orderBy('id', 'desc')
                 ->offset($offsetReq)
                 ->limit($limitReq);
-        }else if($daerah=="cendono"){
+        }
+        else if($daerah=="cendono")
+        {
             $dataQuery =  WaterLevelAndRainRecord::select('id','curah_hujan_cendono','tanggal')
                 ->orderBy('id', 'desc')
                 ->offset($offsetReq)
                 ->limit($limitReq);
-        }else if($daerah=="purwodadi"){
+        }
+        else if($daerah=="purwodadi")
+        {
             $dataQuery =  WaterLevelAndRainRecord::select('id','level_muka_air_purwodadi','tanggal')
                 ->orderBy('id', 'desc')
                 ->offset($offsetReq)
                 ->limit($limitReq);
-        }else if($daerah=="dhompo"){
+        }
+        else if($daerah=="dhompo")
+        {
             $dataQuery =  WaterLevelAndRainRecord::select('id','level_muka_air_dhompo','tanggal')
                 ->orderBy('id', 'desc')
                 ->offset($offsetReq)
                 ->limit($limitReq);
-        }else{
+        }
+        else
+        {
             return [
                 'history' => null,
                 'total_count' => 0,
             ];
         }
+
         $data = $dataQuery->get();
         $totalCount = $dataQuery->toBase()->getCountForPagination();
         return [

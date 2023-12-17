@@ -5,8 +5,10 @@ namespace App\Services\Impl;
 use App\Http\Requests\InsertRoleRequest;
 use App\Repository\UsersRoleRepository;
 use App\Services\UsersRoleService;
+use Exception;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Log;
+use RuntimeException;
 
 class UsersRoleServiceImpl implements UsersRoleService
 {
@@ -19,10 +21,12 @@ class UsersRoleServiceImpl implements UsersRoleService
 
     public function getAllRoles(): Collection
     {
-        try {
+        try
+        {
             return $this->usersRoleRepository->getAllRoles();
         }
-        catch (Exception $e){
+        catch (Exception $e)
+        {
             Log::error('Error: ' . $e->getMessage() . ' caused by: ' . ($e->getPrevious() ? $e->getPrevious()->getMessage() : 'No previous exception'), ['exception' => $e]);
             throw new RuntimeException($e->getMessage() . ' caused by: ' . $e->getPrevious(), $e->getCode(), $e);
         }
@@ -30,11 +34,13 @@ class UsersRoleServiceImpl implements UsersRoleService
 
     public function createRole(InsertRoleRequest $request)
     {
-        try {
+        try
+        {
             $req = $request->validated();
             return $this->usersRoleRepository->insertRole($req);
         }
-        catch (Exception $e){
+        catch (Exception $e)
+        {
             Log::error('Error: ' . $e->getMessage() . ' caused by: ' . ($e->getPrevious() ? $e->getPrevious()->getMessage() : 'No previous exception'), ['exception' => $e]);
             throw new RuntimeException($e->getMessage() . ' caused by: ' . $e->getPrevious(), $e->getCode(), $e);
         }

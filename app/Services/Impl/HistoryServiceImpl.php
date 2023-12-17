@@ -4,7 +4,9 @@ namespace App\Services\Impl;
 
 use App\Repository\HistoryRepository;
 use App\Services\HistoryService;
+use Exception;
 use Illuminate\Support\Facades\Log;
+use RuntimeException;
 
 class HistoryServiceImpl implements HistoryService
 {
@@ -17,10 +19,12 @@ class HistoryServiceImpl implements HistoryService
 
     public function getHistory($offsetReq, $limitReq, $daerah): array
     {
-        try {
+        try
+        {
             return $this->historyRepository->getHistory($offsetReq, $limitReq, $daerah);
         }
-        catch (Exception $e){
+        catch (Exception $e)
+        {
             Log::error('Error: ' . $e->getMessage() . ' caused by: ' . ($e->getPrevious() ? $e->getPrevious()->getMessage() : 'No previous exception'), ['exception' => $e]);
             throw new RuntimeException($e->getMessage() . ' caused by: ' . $e->getPrevious(), $e->getCode(), $e);
         }
@@ -28,10 +32,12 @@ class HistoryServiceImpl implements HistoryService
 
     public function getHistoryPrediction($offset, $limit): array
     {
-        try {
+        try
+        {
             return $this->historyRepository->getHistoryPrediction($offset, $limit);
         }
-        catch (Exception $e){
+        catch (Exception $e)
+        {
             Log::error('Error: ' . $e->getMessage() . ' caused by: ' . ($e->getPrevious() ? $e->getPrevious()->getMessage() : 'No previous exception'), ['exception' => $e]);
             throw new RuntimeException($e->getMessage() . ' caused by: ' . $e->getPrevious(), $e->getCode(), $e);
         }
@@ -39,10 +45,12 @@ class HistoryServiceImpl implements HistoryService
 
     public function getChartHistory($model, $daerah, $periode): array
     {
-        try {
+        try
+        {
             return $this->historyRepository->getChartHistory($model, $daerah, $periode);
         }
-        catch (Exception $e){
+        catch (Exception $e)
+        {
             Log::error('Error: ' . $e->getMessage() . ' caused by: ' . ($e->getPrevious() ? $e->getPrevious()->getMessage() : 'No previous exception'), ['exception' => $e]);
             throw new RuntimeException($e->getMessage() . ' caused by: ' . $e->getPrevious(), $e->getCode(), $e);
         }

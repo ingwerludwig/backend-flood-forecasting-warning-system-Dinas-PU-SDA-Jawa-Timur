@@ -4,17 +4,20 @@ namespace App\Http\Controllers;
 
 use App\Http\Response\Response;
 use App\Models\WaterLevelAndRainRecord;
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
 use PhpOffice\PhpSpreadsheet\Shared\Date;
+use RuntimeException;
 
 class ExcelImportController extends Controller
 {
     public function importExcel(Request $request): JsonResponse
     {
-        try {
+        try
+        {
             $file = $request->file('file');
             $data = Excel::toCollection([], $file);
 
@@ -41,7 +44,8 @@ class ExcelImportController extends Controller
             return response()->json(Response::success(null, 'Data inserted successfully', 200));
         }
 
-        catch (Exception $e){
+        catch (Exception $e)
+        {
             Log::error('Error: ' . $e->getMessage() . ' caused by: ' . ($e->getPrevious() ? $e->getPrevious()->getMessage() : 'No previous exception'), ['exception' => $e]);
             throw new RuntimeException($e->getMessage() . ' caused by: ' . $e->getPrevious(), $e->getCode(), $e);
         }

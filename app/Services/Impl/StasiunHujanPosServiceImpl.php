@@ -4,8 +4,10 @@ namespace App\Services\Impl;
 
 use App\Repository\StasiunHujanPosRepository;
 use App\Services\StasiunPosHujanService;
+use Exception;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Log;
+use RuntimeException;
 
 class StasiunHujanPosServiceImpl implements StasiunPosHujanService
 {
@@ -18,10 +20,12 @@ class StasiunHujanPosServiceImpl implements StasiunPosHujanService
 
     public function changeBatas($request)
     {
-        try {
+        try
+        {
             return $this->stasiunHujanPosRepository->changeBatas($request);
         }
-        catch (Exception $e){
+        catch (Exception $e)
+        {
             Log::error('Error: ' . $e->getMessage() . ' caused by: ' . ($e->getPrevious() ? $e->getPrevious()->getMessage() : 'No previous exception'), ['exception' => $e]);
             throw new RuntimeException($e->getMessage() . ' caused by: ' . $e->getPrevious(), $e->getCode(), $e);
         }
@@ -29,10 +33,12 @@ class StasiunHujanPosServiceImpl implements StasiunPosHujanService
 
     public function getStasiunInformation($request)
     {
-        try {
+        try
+        {
             return $this->stasiunHujanPosRepository->getStasiunInformation($request);
         }
-        catch (Exception $e){
+        catch (Exception $e)
+        {
             Log::error('Error: ' . $e->getMessage() . ' caused by: ' . ($e->getPrevious() ? $e->getPrevious()->getMessage() : 'No previous exception'), ['exception' => $e]);
             throw new RuntimeException($e->getMessage() . ' caused by: ' . $e->getPrevious(), $e->getCode(), $e);
         }
