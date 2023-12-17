@@ -12,12 +12,48 @@
 Backend project Repository for Flood Forecasting Warning Sistem Dinas PU Sumber Daya Air Jatim <br>
 
 ## Tech Stack For Flood Forecasting Warning System Web Monitoring
-| Web Development                                           | Artificial Intelligence                            |
-|-----------------------------------------------------------| ---------------------------------------------------|
-| * [![Laravel][Laravel.com]][Laravel-url]                  | * [![Python][python.com]][python-url]              |
-| * [![MySQL][mysql.com]][mysql-url]                        | * [![Tensorflow][TensorFlow.com]][TensorFlow-url]  |
-| * [![React][React.com]][React-url]                        | * [![Flask][Flask.com]][Flask-url]                 |
-| * [![TailwindCSS][TailwindCSS.com]][TailwindCSS-url]      | * [![Keras][Keras.com]][Keras-url]                 |
+| Web Development                                    | Artificial Intelligence                         |
+|----------------------------------------------------|-------------------------------------------------|
+| [![Laravel][Laravel.com]][Laravel-url]             | [![Python][python.com]][python-url]             |
+| [![MySQL][mysql.com]][mysql-url]                   | [![Tensorflow][TensorFlow.com]][TensorFlow-url] |
+| [![React][React.com]][React-url]                   | [![Flask][Flask.com]][Flask-url]                |
+| [![TailwindCSS][TailwindCSS.com]][TailwindCSS-url] | [![Keras][Keras.com]][Keras-url]                |
+
+## Requirements for This Back-End Repository
+* [PHP 8.1](https://www.php.net)
+* [MySQL](https://www.mysql.com)
+* [Laravel 9](https://laravel.com)
+
+## Getting Started
+1. Clone this repository
+```
+git clone https://github.com/ingwerludwig/web-flood-forecasting-warning-system-Dinas-PU-SDA-Jatim.git
+```
+2. Install All Dependencies
+```
+composer install
+```
+3. Copy the .env.example to .env
+```
+cp .env.example .env
+```
+4. Generate API Key
+```
+php artisan key:generate
+```
+5. Generate JWT Secret
+```
+php artisan jwt:secret
+```
+6. Adjust your .env with your environment
+7. Start the application
+```
+php artisan serve
+```
+8. Open new terminal, and start the Cronjob
+```
+php artisan schedule:work 
+```
 
 ## Web Endpoint Documentation
 https://www.postman.com/myprivatepersonal/workspace/ffws-api-endpoint-testing/collection/26715144-6bb171e5-e1f5-4df6-842c-b0e6417eb53f?action=share&creator=26715144
