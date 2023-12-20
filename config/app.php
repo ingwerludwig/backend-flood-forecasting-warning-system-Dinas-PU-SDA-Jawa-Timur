@@ -59,6 +59,7 @@ return [
     'asset_url' => env('ASSET_URL', null),
 
     'flask_url' => env('FLASK_URL', 'http://localhost:8000/api/predict'),
+    'notification_url' => env('NOTIFICATION_URL'),
     'sih_3_token_url' => env('SIH3_TOKEN_URL'),
     'sih_3_get_pos_url' => env('SIH3_GET_POS_URL'),
     'sih_3_pos_detail_url' => env('SIH3_POS_DETAIL_URL'),
@@ -193,6 +194,7 @@ return [
         App\Providers\StasiunAirPosProvider::class,
         App\Providers\StasiunHujanPosProvider::class,
         App\Providers\NotifikasiKontakProvider::class,
+        App\Providers\NotifikasiProvider::class,
 
     ],
 

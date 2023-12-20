@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\NotifikasiController;
 use App\Http\Controllers\NotifikasiKontakController;
 use App\Http\Controllers\StasiunHujanPosController;
 use Illuminate\Http\Request;
@@ -43,5 +44,6 @@ Route::withoutMiddleware('auth:api')->group(function() {
     Route::get('/getHistoryPrediction',[HistoryController::class, 'getHistoryPrediction']);
     Route::get('/getChartData',[HistoryController::class, 'getChartData']);
     Route::post('/register', [AuthController::class, 'register']);
+    Route::post('/notification/polling', [NotifikasiController::class, 'handleStartCommand']);
     Route::post('/login', [AuthController::class, 'login'])->name('login');
 });

@@ -23,6 +23,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->command('predict:everyonehour')->hourlyAt(1);
+        $schedule->command('polling:notificationtelegram')->everyFiveMinutes();
     }
 
     /**

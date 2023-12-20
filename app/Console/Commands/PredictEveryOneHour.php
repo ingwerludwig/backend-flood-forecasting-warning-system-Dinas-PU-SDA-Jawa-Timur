@@ -2,12 +2,15 @@
 
 namespace App\Console\Commands;
 
+use App\Models\NotifikasiTelegram;
 use Exception;
 use GuzzleHttp\Client;
 use Illuminate\Console\Command;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
+use Telegram\Bot\Laravel\Facades\Telegram;
 
 class PredictEveryOneHour extends Command
 {
@@ -100,7 +103,7 @@ class PredictEveryOneHour extends Command
             }
 
             $current_hour = Carbon::parse($formattedTimestamp)->hour;
-//            dd($current_hour);
+
             $responseLawang = $client1->get($sih_3_pos_detail_url.$id_lawang.'/'.$dateString.'/1/1');
             $responseCendono = $client1->get($sih_3_pos_detail_url.$id_cendono.'/'.$dateString.'/1/1');
             $responseDhompo = $client1->get($sih_3_pos_detail_url.$id_dhompo.'/'.$dateString.'/1/2');
@@ -182,6 +185,8 @@ class PredictEveryOneHour extends Command
                 DB::table('awlr_arr_per_jam')->insert($data);
             }
 
+            $result_bahaya = [];
+
             $rowCount = DB::table('awlr_arr_per_jam')->count();
             if ($rowCount >= 5)
             {
@@ -215,6 +220,7 @@ class PredictEveryOneHour extends Command
                             else
                             {
                                 $status = "BAHAYA";
+                                array_push($result_bahaya, '(Status '.$status.') Prediksi '.$nama_pos. ' pada jam '. $prediction . ' : ' . $prediction['value']);
                             }
 
                             $existingRecord = DB::table('hasil_prediksi')
@@ -252,9 +258,23 @@ class PredictEveryOneHour extends Command
                             }
                         }
                     }
+
+                    $all_chat_id = NotifikasiTelegram::all()->pluck('chat_id')->all();
+
+                    if (!empty($result_bahaya)) {
+                        $resultString = implode(PHP_EOL, $result_bahaya);
+                        foreach ($all_chat_id as $chat_id) {
+                            Telegram::sendMessage([
+                                'chat_id' => $chat_id,
+                                'text' => $resultString,
+                            ]);
+                        }
+                    }
+
                 }
+                $this->info('Prediction executed successfully!');
             }
-            $this->info('Prediction executed successfully!');
+            $this->info('Cron executed successfully!');
             return 0;
 
         } catch (Throwable $exception) {
